@@ -1,106 +1,268 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 * {
   box-sizing: border-box;
 }
 
+:root {
+  /* Phosphor green palette */
+  --g-bright:   #39ff14;
+  --g-primary:  #2ddb0f;
+  --g-mid:      #1ea80a;
+  --g-dim:      #0f6604;
+  --g-ghost:    #072e02;
+  --g-bg:       #060c05;
+
+  /* Glow layers */
+  --glow-sharp:  0 0 4px rgba(57, 255, 20, 0.9);
+  --glow-soft:   0 0 12px rgba(57, 255, 20, 0.4);
+  --glow-wide:   0 0 28px rgba(57, 255, 20, 0.15);
+  --glow-full:   var(--glow-sharp), var(--glow-soft), var(--glow-wide);
+
+  --font-pixel: 'Press Start 2P', monospace;
+}
+
+/* ── Reset ──────────────────────────────── */
+
 body {
   margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: 'Press Start 2P', monospace;
+  background: var(--g-bg);
+  color: var(--g-primary);
+  font-family: var(--font-pixel);
   overflow: hidden;
 }
 
-/* ── CRT effects ─────────────────────────────────── */
+/* ── CRT overlay effects ────────────────── */
 
 .crt-scanlines {
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.25) 0px,
-    rgba(0, 0, 0, 0.25) 1px,
-    transparent 1px,
-    transparent 3px
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    rgba(57, 255, 20, 0.015) 1px,
+    rgba(57, 255, 20, 0.015) 3px
   );
   pointer-events: none;
 }
 
 .crt-vignette {
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.75) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.6) 85%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
   pointer-events: none;
 }
 
+/* CRT screen curvature illusion via box-shadow inside */
+.crt-wrap {
+  position: fixed;
+  inset: 0;
+  box-shadow: inset 0 0 120px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 48;
+}
+
+/* ── Flicker ────────────────────────────── */
+
 @keyframes flicker {
-  0%   { opacity: 0.97; }
-  30%  { opacity: 1; }
-  60%  { opacity: 0.98; }
-  100% { opacity: 0.97; }
+  0%   { opacity: 1; }
+  8%   { opacity: 0.96; }
+  16%  { opacity: 1; }
+  24%  { opacity: 0.98; }
+  42%  { opacity: 1; }
+  58%  { opacity: 0.97; }
+  72%  { opacity: 1; }
+  88%  { opacity: 0.99; }
+  100% { opacity: 1; }
 }
 
 .crt-flicker {
-  animation: flicker 0.12s infinite;
+  animation: flicker 4s infinite;
 }
 
-/* ── Cursor blink ────────────────────────────────── */
+/* ── Phosphor glow text ─────────────────── */
+
+.glow {
+  text-shadow: var(--glow-full);
+}
+
+.glow-sm {
+  text-shadow: var(--glow-sharp), var(--glow-soft);
+}
+
+.glow-xs {
+  text-shadow: var(--glow-sharp);
+}
+
+/* ── Cursor blink ───────────────────────── */
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 .cursor {
   display: inline-block;
-  width: 0.6em;
-  height: 1em;
-  background: #fff;
-  animation: blink 1s step-end infinite;
+  width: 0.55em;
+  height: 1.1em;
+  background: var(--g-bright);
+  box-shadow: var(--glow-full);
+  animation: blink 1.1s step-end infinite;
   vertical-align: text-bottom;
-  margin-left: 2px;
+  margin-left: 1px;
 }
 
-/* ── Pixel border ────────────────────────────────── */
+/* ── Pixel border (green) ───────────────── */
 
-.pixel-border {
+.px-border {
   box-shadow:
-    -2px  0    0 0 #fff,
-     2px  0    0 0 #fff,
-     0   -2px  0 0 #fff,
-     0    2px  0 0 #fff;
+    -2px  0   0 0 var(--g-mid),
+     2px  0   0 0 var(--g-mid),
+     0  -2px  0 0 var(--g-mid),
+     0   2px  0 0 var(--g-mid);
 }
 
-/* ── Text glow ───────────────────────────────────── */
-
-.text-glow {
-  text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+.px-border-bright {
+  box-shadow:
+    -2px  0   0 0 var(--g-primary),
+     2px  0   0 0 var(--g-primary),
+     0  -2px  0 0 var(--g-primary),
+     0   2px  0 0 var(--g-primary);
 }
 
-/* ── Terminal scrollbar ──────────────────────────── */
+/* ── Terminal scrollbar ─────────────────── */
 
-.terminal-scroll {
+.t-scroll {
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--g-dim) transparent;
 }
 
-.terminal-scroll::-webkit-scrollbar {
-  width: 4px;
+.t-scroll::-webkit-scrollbar {
+  width: 3px;
 }
-.terminal-scroll::-webkit-scrollbar-track {
-  background: #000;
+.t-scroll::-webkit-scrollbar-track {
+  background: transparent;
 }
-.terminal-scroll::-webkit-scrollbar-thumb {
-  background: #fff;
+.t-scroll::-webkit-scrollbar-thumb {
+  background: var(--g-dim);
 }
 
-/* ── Hidden input trick ──────────────────────────── */
+/* ── Ghost input ────────────────────────── */
 
 .ghost-input {
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
-  font-family: 'Press Start 2P', monospace;
+  color: var(--g-bright);
+  font-family: var(--font-pixel);
   font-size: inherit;
   caret-color: transparent;
   flex: 1;
   min-width: 0;
+  text-shadow: var(--glow-sharp);
+}
+
+/* ── Animated scan divider ──────────────── */
+
+@keyframes scan-move {
+  0%   { top: 0%; opacity: 0; }
+  5%   { opacity: 0.6; }
+  95%  { opacity: 0.6; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.scan-divider {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-divider::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--g-dim) 20%,
+    var(--g-mid) 50%,
+    var(--g-dim) 80%,
+    transparent 100%
+  );
+  animation: scan-move 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Portrait pixel dither ──────────────── */
+
+@keyframes portrait-pulse {
+  0%, 100% { box-shadow: 0 0 8px var(--g-dim), inset 0 0 20px rgba(57,255,20,0.05); }
+  50%       { box-shadow: 0 0 16px var(--g-mid), inset 0 0 30px rgba(57,255,20,0.08); }
+}
+
+.portrait-box {
+  animation: portrait-pulse 3s ease-in-out infinite;
+}
+
+/* ── Command pill hover ─────────────────── */
+
+.cmd-pill {
+  color: var(--g-mid);
+  font-family: var(--font-pixel);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.1s, text-shadow 0.1s;
+  padding: 6px 8px;
+  position: relative;
+}
+
+.cmd-pill::before {
+  content: attr(data-cmd);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.cmd-pill:hover {
+  color: var(--g-bright);
+  text-shadow: var(--glow-full);
+}
+
+.cmd-pill:active {
+  transform: scale(0.95);
+}
+
+/* ── Boot screen ────────────────────────── */
+
+@keyframes type-in {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.boot-line {
+  animation: type-in 0.08s ease-out both;
+}
+
+/* ── Noise texture overlay ──────────────── */
+
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  z-index: 47;
+  mix-blend-mode: screen;
 }

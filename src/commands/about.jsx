@@ -5,9 +5,9 @@ export function aboutCommand() {
     <div className="my-1 leading-loose">
       <p>{'┌─ ABOUT ─────────────────────────────┐'}</p>
       <p>{'│'}</p>
-      <p>{'│  '}<span className="text-glow font-bold">{bio.alias}</span><span className="opacity-50 text-[7px]">  ({bio.name})</span></p>
+      <p>{'│  '}<span className="text-glow font-bold">{bio.alias}</span><span className="opacity-50 text-[10px]">  ({bio.name})</span></p>
       <p>{'│  '}{bio.title}</p>
-      <p>{'│  '}<span className="opacity-60 text-[7px]">{bio.intro}</span></p>
+      <p>{'│  '}<span className="opacity-60 text-[10px]">{bio.intro}</span></p>
       <p>{'│'}</p>
       <p>{'│  SKILLS'}</p>
       {bio.skills.map((s, i) => (

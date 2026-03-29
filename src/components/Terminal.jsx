@@ -16,30 +16,22 @@ export default function Terminal() {
   }
 
   const handleCommand = (raw) => {
-    // Echo what user typed
     setHistory(h => [...h, { id: uid(), type: 'input', text: raw }])
-
     const result = executeCommand(raw)
     if (result === null) return
-    if (result === CLEAR_COMMAND) {
-      setHistory([])
-      return
-    }
+    if (result === CLEAR_COMMAND) { setHistory([]); return }
     pushOutput(result)
   }
 
-  // Auto-run help on mount
   useEffect(() => {
     const result = executeCommand('help')
     if (result) pushOutput(result)
   }, [])
 
-  // Auto-scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [history])
 
-  // Refocus input on click anywhere in terminal
   const refocusInput = (e) => {
     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
       containerRef.current?.querySelector('input')?.focus()
@@ -49,33 +41,66 @@ export default function Terminal() {
   return (
     <div
       ref={containerRef}
-      className="crt-flicker fixed inset-0 bg-black flex flex-col"
+      className="flex flex-col h-full min-h-0"
       onClick={refocusInput}
-      style={{ fontFamily: "'Press Start 2P', monospace" }}
+      style={{ fontFamily: 'var(--font-pixel)', background: 'var(--g-bg)' }}
     >
-      {/* Header bar */}
-      <div className="flex items-center justify-between border-b border-white px-4 py-2 shrink-0">
-        <span className="text-[7px] sm:text-[9px] text-glow">VELLOW_OS v1.0</span>
-        <span className="text-[6px] opacity-40">
-          {COMMAND_NAMES.join(' / ')}
-        </span>
+      {/* Header */}
+      <div
+        className="flex items-center justify-between px-5 py-3 shrink-0"
+        style={{ borderBottom: '1px solid var(--g-ghost)' }}
+      >
+        <div className="flex items-center gap-3">
+          {/* Status dot */}
+          <div
+            style={{
+              width: '6px',
+              height: '6px',
+              background: 'var(--g-primary)',
+              boxShadow: '0 0 6px var(--g-primary)',
+              borderRadius: '50%',
+            }}
+          />
+          <span
+            className="glow-sm"
+            style={{ fontSize: '11px', color: 'var(--g-bright)', letterSpacing: '0.08em' }}
+          >
+            VELLOW_OS
+          </span>
+          <span style={{ fontSize: '9px', color: 'var(--g-dim)' }}>v1.0</span>
+        </div>
+        <div
+          className="hidden sm:flex gap-3"
+          style={{ fontSize: '8px', color: 'var(--g-ghost)' }}
+        >
+          {COMMAND_NAMES.map(n => (
+            <span key={n} style={{ letterSpacing: '0.06em' }}>{n}</span>
+          ))}
+        </div>
       </div>
 
       {/* History */}
       <div
-        className="terminal-scroll flex-1 px-4 py-3"
+        className="t-scroll flex-1 min-h-0 px-5 py-4"
         aria-live="polite"
         aria-atomic="false"
       >
         {history.map(entry => (
-          <div key={entry.id} className="mb-1">
+          <div key={entry.id} className="mb-2">
             {entry.type === 'input' ? (
-              <p className="text-[8px] sm:text-[10px] text-glow">
-                <span className="opacity-50 mr-2">vellow@portfolio:~$</span>
+              <p
+                className="glow-xs"
+                style={{ fontSize: '12px', color: 'var(--g-bright)', lineHeight: '1.6' }}
+              >
+                <span style={{ color: 'var(--g-dim)', marginRight: '8px' }}>
+                  vellow@portfolio:~$
+                </span>
                 {entry.text}
               </p>
             ) : (
-              <div className="text-[8px] sm:text-[10px] ml-0 leading-loose">
+              <div
+                style={{ fontSize: '12px', lineHeight: '1.8', color: 'var(--g-primary)' }}
+              >
                 {entry.content}
               </div>
             )}
@@ -84,8 +109,11 @@ export default function Terminal() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
-      <div className="border-t border-white px-4 py-3 shrink-0">
+      {/* Input area */}
+      <div
+        className="px-5 py-4 shrink-0"
+        style={{ borderTop: '1px solid var(--g-ghost)' }}
+      >
         <CommandInput onSubmit={handleCommand} />
       </div>
     </div>

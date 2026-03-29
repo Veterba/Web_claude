@@ -67,14 +67,14 @@ export default function BootScreen({ onComplete }) {
 
   return (
     <div
-      className="crt-flicker fixed inset-0 bg-black flex flex-col justify-center items-start p-6 sm:p-12"
-      style={{ fontFamily: "'Press Start 2P', monospace" }}
+      className="crt-flicker fixed inset-0 flex flex-col justify-center items-start p-6 sm:p-12"
+      style={{ fontFamily: "'Press Start 2P', monospace", background: 'var(--crt-bg)' }}
     >
       <div className="w-full max-w-3xl mx-auto">
         {visibleLines.map((line, i) => {
           if (line.progress) {
             return (
-              <p key={i} className="text-white text-[8px] sm:text-[10px] leading-relaxed text-glow whitespace-pre">
+              <p key={i} className="text-xs sm:text-sm leading-relaxed text-glow whitespace-pre">
                 {line.text}{'█'.repeat(barFilled)}{'░'.repeat(barEmpty)}{' '}
                 {String(Math.min(progress, 1337)).padStart(4, ' ')} KB OK
               </p>
@@ -83,7 +83,7 @@ export default function BootScreen({ onComplete }) {
           if (line.loading) {
             return (
               <div key={i} className="my-1">
-                <p className="text-white text-[8px] sm:text-[10px] leading-relaxed text-glow mb-1">
+                <p className="text-xs sm:text-sm leading-relaxed text-glow mb-1">
                   {'[' + '█'.repeat(Math.floor(loadingWidth / 5)) + '░'.repeat(20 - Math.floor(loadingWidth / 5)) + ']'} {loadingWidth}%
                 </p>
               </div>
@@ -91,13 +91,13 @@ export default function BootScreen({ onComplete }) {
           }
           if (line.prompt) {
             return (
-              <p key={i} className="text-white text-[8px] sm:text-[10px] leading-relaxed text-glow mt-4">
+              <p key={i} className="text-xs sm:text-sm leading-relaxed text-glow mt-4">
                 {line.text}<span className="cursor" />
               </p>
             )
           }
           return (
-            <p key={i} className="text-white text-[8px] sm:text-[10px] leading-relaxed text-glow whitespace-pre">
+            <p key={i} className="text-xs sm:text-sm leading-relaxed text-glow whitespace-pre">
               {line.text || '\u00A0'}
             </p>
           )
@@ -105,8 +105,8 @@ export default function BootScreen({ onComplete }) {
       </div>
 
       <p
-        className="fixed bottom-3 right-4 text-white opacity-30"
-        style={{ fontSize: '6px', fontFamily: "'Press Start 2P', monospace" }}
+        className="fixed bottom-3 right-4 opacity-30"
+        style={{ fontSize: '8px', fontFamily: "'Press Start 2P', monospace" }}
       >
         [click or any key to skip]
       </p>

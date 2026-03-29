@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import BootScreen from './components/BootScreen'
-import Terminal from './components/Terminal'
+import DesktopLayout from './components/DesktopLayout'
 import CrtOverlay from './components/CrtOverlay'
 
 const SKIP_KEY = 'vellow_boot_done'
@@ -19,7 +19,7 @@ function App() {
       <CrtOverlay />
       {phase === 'boot'
         ? <BootScreen onComplete={handleBootComplete} />
-        : <Terminal />
+        : <DesktopLayout />
       }
     </main>
   )

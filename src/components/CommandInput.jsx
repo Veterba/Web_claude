@@ -5,17 +5,12 @@ export default function CommandInput({ onSubmit }) {
   const [value, setValue] = useState('')
   const inputRef = useRef(null)
 
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+  useEffect(() => { inputRef.current?.focus() }, [])
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       const cmd = value.trim()
-      if (cmd) {
-        onSubmit(cmd)
-        setValue('')
-      }
+      if (cmd) { onSubmit(cmd); setValue('') }
     }
   }
 
@@ -27,33 +22,38 @@ export default function CommandInput({ onSubmit }) {
 
   return (
     <div>
-      {/* Mobile command pills */}
-      <div className="flex flex-wrap gap-2 mb-3 sm:hidden">
+      {/* Command pills — visible on all sizes */}
+      <div className="flex flex-wrap gap-2 mb-4">
         {COMMAND_NAMES.map(name => (
           <button
             key={name}
+            data-cmd={name}
             onClick={() => injectCommand(name)}
-            className="pixel-border px-2 py-1 text-white text-[6px] hover:bg-white hover:text-black transition-colors"
-            style={{ fontFamily: "'Press Start 2P', monospace" }}
+            className="cmd-pill"
+            style={{ fontSize: '9px', letterSpacing: '0.06em' }}
           >
-            {name}
+            [{name}]
           </button>
         ))}
       </div>
 
       {/* Prompt line */}
       <div
-        className="flex items-center gap-0 cursor-text"
+        className="flex items-center cursor-text"
         onClick={() => inputRef.current?.focus()}
       >
-        <span className="text-glow shrink-0 mr-2 text-[8px] sm:text-[10px]">
+        <span
+          className="glow-xs shrink-0 mr-2"
+          style={{ fontSize: '12px', color: 'var(--g-dim)' }}
+        >
           vellow@portfolio:~$
         </span>
         <div className="flex items-center flex-1 relative min-w-0">
           <input
             ref={inputRef}
             type="text"
-            className="ghost-input text-[8px] sm:text-[10px]"
+            className="ghost-input"
+            style={{ fontSize: '12px' }}
             value={value}
             onChange={e => setValue(e.target.value)}
             onKeyDown={handleKeyDown}

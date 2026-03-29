@@ -24,7 +24,7 @@ export function executeCommand(raw) {
   if (!cmd) {
     return (
       <span className="opacity-60">
-        Command not found: <span className="text-white">{input}</span>
+        Command not found: <span className="text-glow">{input}</span>
         {'. Type '}
         <span className="text-glow">help</span>
         {' for available commands.'}

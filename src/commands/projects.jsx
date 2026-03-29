@@ -7,11 +7,11 @@ export function projectsCommand() {
       {projects.map((p, i) => (
         <div key={i} className="mb-4 ml-2 pixel-border p-3">
           <p className="text-glow mb-1">{p.title}</p>
-          <p className="opacity-60 text-[7px] mb-2 leading-relaxed">{p.description}</p>
-          <p className="opacity-50 text-[6px] mb-2">
+          <p className="opacity-60 text-[10px] mb-2 leading-relaxed">{p.description}</p>
+          <p className="opacity-50 text-[9px] mb-2">
             {p.stack.join(' · ')}
           </p>
-          <div className="flex gap-4 text-[7px]">
+          <div className="flex gap-4 text-[10px]">
             {p.github && (
               <a
                 href={p.github}
