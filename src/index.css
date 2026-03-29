@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  overflow: hidden;
+}
+
+/* ── CRT effects ─────────────────────────────────── */
+
+.crt-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.25) 0px,
+    rgba(0, 0, 0, 0.25) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+
+.crt-vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.75) 100%);
+  pointer-events: none;
+}
+
+@keyframes flicker {
+  0%   { opacity: 0.97; }
+  30%  { opacity: 1; }
+  60%  { opacity: 0.98; }
+  100% { opacity: 0.97; }
+}
+
+.crt-flicker {
+  animation: flicker 0.12s infinite;
+}
+
+/* ── Cursor blink ────────────────────────────────── */
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1em;
+  background: #fff;
+  animation: blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+/* ── Pixel border ────────────────────────────────── */
+
+.pixel-border {
+  box-shadow:
+    -2px  0    0 0 #fff,
+     2px  0    0 0 #fff,
+     0   -2px  0 0 #fff,
+     0    2px  0 0 #fff;
+}
+
+/* ── Text glow ───────────────────────────────────── */
+
+.text-glow {
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+/* ── Terminal scrollbar ──────────────────────────── */
+
+.terminal-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.terminal-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.terminal-scroll::-webkit-scrollbar-track {
+  background: #000;
+}
+.terminal-scroll::-webkit-scrollbar-thumb {
+  background: #fff;
+}
+
+/* ── Hidden input trick ──────────────────────────── */
+
+.ghost-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: inherit;
+  caret-color: transparent;
+  flex: 1;
+  min-width: 0;
+}
