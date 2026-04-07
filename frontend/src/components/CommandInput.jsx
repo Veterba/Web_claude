@@ -44,27 +44,25 @@ export default function CommandInput({ onSubmit }) {
       >
         <span
           className="glow-xs shrink-0 mr-2"
-          style={{ fontSize: '12px', color: 'var(--g-dim)' }}
+          style={{ fontSize: '12px', color: 'var(--g-mid)' }}
         >
           vellow@portfolio:~$
         </span>
-        <div className="flex items-center flex-1 relative min-w-0">
-          <input
-            ref={inputRef}
-            type="text"
-            className="ghost-input"
-            style={{ fontSize: '12px' }}
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            autoCapitalize="none"
-            autoCorrect="off"
-            autoComplete="off"
-            spellCheck={false}
-            aria-label="Terminal input"
-          />
-          <span className="cursor shrink-0" />
-        </div>
+        <input
+          ref={inputRef}
+          type="text"
+          className="ghost-input"
+          style={{ fontSize: '12px', width: value.length ? `${value.length + 1}ch` : '0' }}
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          autoCapitalize="none"
+          autoCorrect="off"
+          autoComplete="off"
+          spellCheck={false}
+          aria-label="Terminal input"
+        />
+        <span className="cursor shrink-0" />
       </div>
     </div>
   )

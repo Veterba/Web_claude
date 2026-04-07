@@ -1,27 +1,28 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap');
 
 * {
   box-sizing: border-box;
 }
 
 :root {
-  /* Phosphor green palette */
-  --g-bright:   #39ff14;
-  --g-primary:  #2ddb0f;
-  --g-mid:      #1ea80a;
-  --g-dim:      #0f6604;
-  --g-ghost:    #072e02;
-  --g-bg:       #060c05;
+  /* Amber noir palette */
+  --g-bright:   #f0c45a;
+  --g-primary:  #d4a23a;
+  --g-mid:      #9a7428;
+  --g-dim:      #5c4518;
+  --g-ghost:    #1e1708;
+  --g-bg:       #08090c;
+  --g-surface:  #0e1014;
 
-  /* Glow layers (reduced) */
-  --glow-sharp:  0 0 2px rgba(57, 255, 20, 0.5);
-  --glow-soft:   0 0 6px rgba(57, 255, 20, 0.2);
-  --glow-wide:   0 0 12px rgba(57, 255, 20, 0.08);
+  /* Glow layers */
+  --glow-sharp:  0 0 3px rgba(240, 196, 90, 0.4);
+  --glow-soft:   0 0 8px rgba(240, 196, 90, 0.15);
   --glow-full:   var(--glow-sharp), var(--glow-soft);
 
   --font-pixel: 'Press Start 2P', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 /* ── Reset ──────────────────────────────── */
@@ -39,10 +40,10 @@ body {
 .crt-scanlines {
   background: repeating-linear-gradient(
     0deg,
-    rgba(0, 0, 0, 0.18) 0px,
-    rgba(0, 0, 0, 0.18) 1px,
-    rgba(57, 255, 20, 0.015) 1px,
-    rgba(57, 255, 20, 0.015) 3px
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
   );
   pointer-events: none;
 }
@@ -51,28 +52,23 @@ body {
   background: radial-gradient(
     ellipse at center,
     transparent 65%,
-    rgba(0, 0, 0, 0.25) 90%,
-    rgba(0, 0, 0, 0.4) 100%
+    rgba(0, 0, 0, 0.2) 90%,
+    rgba(0, 0, 0, 0.35) 100%
   );
   pointer-events: none;
 }
 
-/* CRT screen curvature illusion via box-shadow inside */
 .crt-wrap {
   position: fixed;
   inset: 0;
-  box-shadow: inset 0 0 120px rgba(0,0,0,0.5);
+  box-shadow: inset 0 0 80px rgba(0,0,0,0.4);
   pointer-events: none;
   z-index: 48;
 }
 
-/* ── Flicker (disabled) ────────────────── */
+.crt-flicker {}
 
-.crt-flicker {
-  /* animation removed */
-}
-
-/* ── Phosphor glow text ─────────────────── */
+/* ── Glow text ─────────────────────────── */
 
 .glow {
   text-shadow: var(--glow-full);
@@ -83,6 +79,12 @@ body {
 }
 
 .glow-xs {
+  text-shadow: var(--glow-sharp);
+}
+
+/* text-glow utility used in command outputs */
+.text-glow {
+  color: var(--g-bright);
   text-shadow: var(--glow-sharp);
 }
 
@@ -104,22 +106,15 @@ body {
   margin-left: 1px;
 }
 
-/* ── Pixel border (green) ───────────────── */
+/* ── Pixel border ──────────────────────── */
 
-.px-border {
-  box-shadow:
-    -2px  0   0 0 var(--g-mid),
-     2px  0   0 0 var(--g-mid),
-     0  -2px  0 0 var(--g-mid),
-     0   2px  0 0 var(--g-mid);
+.px-border,
+.pixel-border {
+  border: 1px solid var(--g-ghost);
 }
 
 .px-border-bright {
-  box-shadow:
-    -2px  0   0 0 var(--g-primary),
-     2px  0   0 0 var(--g-primary),
-     0  -2px  0 0 var(--g-primary),
-     0   2px  0 0 var(--g-primary);
+  border: 1px solid var(--g-dim);
 }
 
 /* ── Terminal scrollbar ─────────────────── */
@@ -139,6 +134,7 @@ body {
 }
 .t-scroll::-webkit-scrollbar-thumb {
   background: var(--g-dim);
+  border-radius: 2px;
 }
 
 /* ── Ghost input ────────────────────────── */
@@ -156,17 +152,15 @@ body {
   text-shadow: var(--glow-sharp);
 }
 
-/* ── Scan divider (animation removed) ──── */
+/* ── Scan divider ──────────────────────── */
 
 .scan-divider {
   position: relative;
 }
 
-/* ── Portrait pixel dither ──────────────── */
+/* ── Portrait box ──────────────────────── */
 
-.portrait-box {
-  /* animation removed */
-}
+.portrait-box {}
 
 /* ── Command pill hover ─────────────────── */
 
@@ -174,10 +168,10 @@ body {
   color: var(--g-mid);
   font-family: var(--font-pixel);
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: color 0.1s, text-shadow 0.1s;
-  padding: 6px 8px;
+  transition: color 0.15s, border-color 0.15s, text-shadow 0.15s;
+  padding: 6px 10px;
   position: relative;
 }
 
@@ -193,6 +187,7 @@ body {
 
 .cmd-pill:hover {
   color: var(--g-bright);
+  border-color: var(--g-ghost);
   text-shadow: var(--glow-full);
 }
 
@@ -211,13 +206,24 @@ body {
   animation: type-in 0.08s ease-out both;
 }
 
+/* ── 3D tilt card ──────────────────────── */
+
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+
+.tilt-card-inner {
+  transform: translateZ(20px);
+}
+
 /* ── Noise texture overlay ──────────────── */
 
 .noise {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
   z-index: 47;

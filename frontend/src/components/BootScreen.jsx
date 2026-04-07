@@ -68,7 +68,7 @@ export default function BootScreen({ onComplete }) {
   return (
     <div
       className="crt-flicker fixed inset-0 flex flex-col justify-center items-start p-6 sm:p-12"
-      style={{ fontFamily: "'Press Start 2P', monospace", background: 'var(--crt-bg)' }}
+      style={{ fontFamily: "'Press Start 2P', monospace", background: 'var(--g-bg)' }}
     >
       <div className="w-full max-w-3xl mx-auto">
         {visibleLines.map((line, i) => {

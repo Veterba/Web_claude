@@ -1,8 +1,29 @@
+import { useRef, useCallback } from 'react'
 import { bio } from '../data/bio'
 
-/* Pixel dithering pattern — simulates a placeholder portrait */
-function PixelPortrait() {
-  // 16×16 dither grid, 1=lit pixel
+/* ── 3D Tilt Portrait Card ─────────────────── */
+function TiltPortrait() {
+  const cardRef = useRef(null)
+
+  const handleMouseMove = useCallback((e) => {
+    const card = cardRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+    const rotateX = ((y - centerY) / centerY) * -12
+    const rotateY = ((x - centerX) / centerX) * 12
+    card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    const card = cardRef.current
+    if (!card) return
+    card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg)'
+  }, [])
+
   const rows = [
     '0001111111100000',
     '0011111111111000',
@@ -24,29 +45,45 @@ function PixelPortrait() {
 
   return (
     <div
-      className="portrait-box mx-auto mb-6 border relative"
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="tilt-card mx-auto mb-6 relative cursor-default"
       style={{
         width: '220px',
         height: '220px',
-        borderColor: 'var(--g-mid)',
-        borderWidth: '2px',
-        background: 'var(--g-ghost)',
+        border: '1px solid var(--g-dim)',
+        background: 'linear-gradient(145deg, var(--g-surface) 0%, var(--g-bg) 100%)',
         padding: '16px',
+        transition: 'transform 0.15s ease-out',
       }}
     >
-      {/* Corner decorations */}
-      {['top-1 left-1', 'top-1 right-1', 'bottom-1 left-1', 'bottom-1 right-1'].map(pos => (
+      {/* Corner accents */}
+      {[
+        { top: '-1px', left: '-1px' },
+        { top: '-1px', right: '-1px' },
+        { bottom: '-1px', left: '-1px' },
+        { bottom: '-1px', right: '-1px' },
+      ].map((pos, i) => (
         <div
-          key={pos}
-          className={`absolute ${pos} w-2 h-2`}
-          style={{ background: 'var(--g-mid)' }}
+          key={i}
+          style={{
+            position: 'absolute',
+            ...pos,
+            width: '8px',
+            height: '8px',
+            borderTop: pos.top ? '2px solid var(--g-primary)' : 'none',
+            borderBottom: pos.bottom ? '2px solid var(--g-primary)' : 'none',
+            borderLeft: pos.left ? '2px solid var(--g-primary)' : 'none',
+            borderRight: pos.right ? '2px solid var(--g-primary)' : 'none',
+          }}
         />
       ))}
 
       {/* Pixel dither grid */}
       <div
-        className="w-full h-full flex flex-col items-center justify-center gap-px"
-        style={{ opacity: 0.5 }}
+        className="tilt-card-inner w-full h-full flex flex-col items-center justify-center gap-px"
+        style={{ opacity: 0.55 }}
       >
         {rows.map((row, r) => (
           <div key={r} className="flex gap-px">
@@ -56,8 +93,7 @@ function PixelPortrait() {
                 style={{
                   width: '8px',
                   height: '8px',
-                  background: px === '1' ? 'var(--g-mid)' : 'transparent',
-                  boxShadow: px === '1' ? '0 0 2px var(--g-dim)' : 'none',
+                  background: px === '1' ? 'var(--g-primary)' : 'transparent',
                 }}
               />
             ))}
@@ -65,16 +101,16 @@ function PixelPortrait() {
         ))}
       </div>
 
-      {/* Replace label */}
+      {/* Label */}
       <div
         className="absolute bottom-0 left-0 right-0 text-center py-1"
         style={{
-          background: 'rgba(6,12,5,0.85)',
+          background: 'rgba(8,9,12,0.9)',
           borderTop: '1px solid var(--g-ghost)',
           fontSize: '7px',
           color: 'var(--g-dim)',
           fontFamily: 'var(--font-pixel)',
-          letterSpacing: '0.05em',
+          letterSpacing: '0.08em',
         }}
       >
         [ YOUR PORTRAIT ]
@@ -94,8 +130,8 @@ export default function ProfilePanel() {
         <div
           className="w-14 h-14 shrink-0 flex items-center justify-center"
           style={{
-            border: '2px solid var(--g-mid)',
-            background: 'var(--g-ghost)',
+            border: '1px solid var(--g-dim)',
+            background: 'var(--g-surface)',
           }}
         >
           <span style={{ fontSize: '6px', color: 'var(--g-dim)', fontFamily: 'var(--font-pixel)' }}>
@@ -117,20 +153,20 @@ export default function ProfilePanel() {
 
       {/* ── Desktop full panel ──────────────────── */}
       <div
-        className="hidden lg:flex flex-col h-full t-scroll scan-divider"
+        className="hidden lg:flex flex-col h-full t-scroll"
         style={{
           fontFamily: 'var(--font-pixel)',
           padding: '32px 28px',
-          background: `linear-gradient(180deg, rgba(57,255,20,0.025) 0%, transparent 40%)`,
+          background: 'var(--g-surface)',
         }}
       >
         {/* Portrait */}
-        <PixelPortrait />
+        <TiltPortrait />
 
         {/* Alias */}
         <h1
           className="glow text-center mb-1"
-          style={{ fontSize: '14px', color: 'var(--g-bright)', letterSpacing: '0.1em' }}
+          style={{ fontSize: '14px', color: 'var(--g-bright)', letterSpacing: '0.12em' }}
         >
           {bio.alias.toUpperCase()}
         </h1>
@@ -138,7 +174,7 @@ export default function ProfilePanel() {
         {/* Real name */}
         <p
           className="text-center mb-1"
-          style={{ fontSize: '9px', color: 'var(--g-mid)' }}
+          style={{ fontSize: '9px', color: 'var(--g-mid)', fontFamily: 'var(--font-mono)' }}
         >
           {bio.name}
         </p>
@@ -146,9 +182,9 @@ export default function ProfilePanel() {
         {/* Title */}
         <p
           className="glow-xs text-center mb-6"
-          style={{ fontSize: '9px', color: 'var(--g-dim)' }}
+          style={{ fontSize: '9px', color: 'var(--g-mid)', letterSpacing: '0.1em' }}
         >
-          ── {bio.title} ──
+          {bio.title}
         </p>
 
         {/* Divider */}
@@ -166,7 +202,8 @@ export default function ProfilePanel() {
           style={{
             fontSize: '10px',
             color: 'var(--g-mid)',
-            lineHeight: '2',
+            lineHeight: '2.2',
+            fontFamily: 'var(--font-mono)',
           }}
         >
           {bio.intro}
@@ -175,7 +212,7 @@ export default function ProfilePanel() {
         {/* Stack tags */}
         <p
           className="glow-xs mb-3"
-          style={{ fontSize: '9px', color: 'var(--g-dim)' }}
+          style={{ fontSize: '9px', color: 'var(--g-mid)', letterSpacing: '0.1em' }}
         >
           STACK//
         </p>
@@ -185,10 +222,11 @@ export default function ProfilePanel() {
               key={s}
               style={{
                 fontSize: '8px',
-                color: 'var(--g-mid)',
-                padding: '3px 7px',
-                border: '1px solid var(--g-ghost)',
-                letterSpacing: '0.05em',
+                color: 'var(--g-primary)',
+                padding: '4px 8px',
+                border: '1px solid var(--g-dim)',
+                letterSpacing: '0.04em',
+                fontFamily: 'var(--font-mono)',
               }}
             >
               {s}
@@ -196,7 +234,7 @@ export default function ProfilePanel() {
           ))}
         </div>
 
-        {/* Divider */}
+        {/* Bottom divider */}
         <div
           className="mt-auto"
           style={{

@@ -73,14 +73,6 @@ export default function Terminal() {
           </span>
           <span style={{ fontSize: '9px', color: 'var(--g-dim)' }}>v1.0</span>
         </div>
-        <div
-          className="hidden sm:flex gap-3"
-          style={{ fontSize: '8px', color: 'var(--g-ghost)' }}
-        >
-          {COMMAND_NAMES.map(n => (
-            <span key={n} style={{ letterSpacing: '0.06em' }}>{n}</span>
-          ))}
-        </div>
       </div>
 
       {/* History */}

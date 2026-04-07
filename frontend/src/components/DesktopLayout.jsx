@@ -15,7 +15,7 @@ export default function DesktopLayout() {
       {/* Right: Profile sidebar */}
       <aside
         className="w-full lg:w-[340px] xl:w-[380px] shrink-0"
-        style={{ borderLeft: '1px solid var(--g-ghost)' }}
+        style={{ borderLeft: '1px solid var(--g-ghost)', background: 'var(--g-surface)' }}
       >
         <ProfilePanel />
       </aside>
